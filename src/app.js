@@ -32,9 +32,10 @@ require("./db/conn");
 const port = process.env.PORT || 5000;
 
 if (process.env.NODE_ENV == "production") {
-  app.use(express.static("client/build"));
-  app.get("*", function (req, res) {
-    res.sendFile("index.html");
+  const path = require("path");
+  app.use(express.static(path.join("client/build")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve("client/build", "index.html"));
   });
 }
 
