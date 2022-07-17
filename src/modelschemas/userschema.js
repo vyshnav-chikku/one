@@ -31,6 +31,10 @@ const userschema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    ver: {
+      type: Number,
+      default: 0,
+    },
     education: [
       {
         institution_name: {
@@ -153,6 +157,7 @@ const userschema = new mongoose.Schema(
         frameworks: [],
       },
     ],
+
     tokens: [
       {
         token: {

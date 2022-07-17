@@ -140,6 +140,7 @@ const DetailsForm = () => {
             <br />
             <label htmlFor="branch">Branch</label>
             <select name="branch" onChange={(e) => setbranch(e.target.value)}>
+              <option value=""></option>
               <option value="CSE">CSE</option>
               <option value="MECH">MECH</option>
               <option value="IT">IT</option>

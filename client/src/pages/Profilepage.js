@@ -3,6 +3,8 @@ import styled from "styled-components";
 import profile from "../assets/profile_dummy/profile1.png";
 import bg1 from "../assets/profilepage/bg1.svg";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import LoopIcon from "@mui/icons-material/Loop";
+import CancelIcon from "@mui/icons-material/Cancel";
 import git from "../assets/profilepage/git.png";
 import linkedin from "../assets/profilepage/linkedin.png";
 import twitter from "../assets/profilepage/twitter.png";
@@ -10,6 +12,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Buffer } from "buffer";
 import { apiUrl } from "../data/api";
+
+const Approve = styled.div`
+  background: ${(props) => props.color};
+`;
 
 const Container = styled.div`
   .update {
@@ -61,14 +67,11 @@ const Container = styled.div`
 
     .approve_container {
       padding: 10px;
-      border: 1px solid grey;
-      border-radius: 5px;
+      border-radius: 25px;
     }
     .approve {
-      background: #47d065;
       color: #fff;
       display: flex;
-      padding: 10px 25px;
       border-radius: 25px;
     }
 
@@ -127,6 +130,12 @@ const Container = styled.div`
     .email_container {
       margin-bottom: 10px;
       display: flex;
+    }
+    .user_name {
+      display: flex;
+      width: 300px;
+      overflow: scroll;
+      margin-left: 5px;
     }
     .current_status {
       margin-bottom: 10px;
@@ -371,7 +380,7 @@ const Profilepage = () => {
 
       const data = res.data;
 
-      console.log(data);
+      console.log(data.ver);
       setdata(res.data);
 
       if (res.status !== 200) {
@@ -414,14 +423,33 @@ const Profilepage = () => {
             Student of{" "}
             {data && data.education[0] && data.education[0].institution_name}
           </div>
-          <div className="approve_container">
+          <Approve
+            color={
+              data && data?.ver === 0
+                ? "red"
+                : data?.ver === 1
+                ? "orange"
+                : "#47d065"
+            }
+            className="approve_container"
+          >
             <div className="approve">
               <div className="tick_icon">
-                <CheckCircleIcon />
+                {data && data?.ver === 0 ? (
+                  <CancelIcon />
+                ) : data?.ver === 1 ? (
+                  <LoopIcon />
+                ) : (
+                  <CheckCircleIcon />
+                )}
               </div>
-              Approve
+              {data && data?.ver === 0
+                ? "Not verified"
+                : data?.ver === 1
+                ? "partially verfied"
+                : "verified"}
             </div>
-          </div>
+          </Approve>
           <div className="profile_buttons">
             <div className="profile_btn" onClick={() => setblock(1)}>
               Profile

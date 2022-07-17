@@ -3,6 +3,8 @@ import styled from "styled-components";
 import profile from "../assets/profile_dummy/profile1.png";
 import bg1 from "../assets/profilepage/bg1.svg";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import LoopIcon from "@mui/icons-material/Loop";
+import CancelIcon from "@mui/icons-material/Cancel";
 import git from "../assets/profilepage/git.png";
 import linkedin from "../assets/profilepage/linkedin.png";
 import twitter from "../assets/profilepage/twitter.png";
@@ -10,6 +12,10 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { Buffer } from "buffer";
 import { apiUrl } from "../data/api";
+
+const Approve = styled.div`
+  background: ${(props) => props.color};
+`;
 
 const Container = styled.div`
   padding: 20px 0;
@@ -62,14 +68,11 @@ const Container = styled.div`
 
     .approve_container {
       padding: 10px;
-      border: 1px solid grey;
-      border-radius: 5px;
+      border-radius: 25px;
     }
     .approve {
-      background: #47d065;
       color: #fff;
       display: flex;
-      padding: 10px 25px;
       border-radius: 25px;
     }
 
@@ -125,9 +128,21 @@ const Container = styled.div`
       display: flex;
       margin-bottom: 10px;
     }
+    .profile_name {
+      display: flex;
+      width: 300px;
+      overflow: scroll;
+      margin-left: 5px;
+    }
     .email_container {
       margin-bottom: 10px;
       display: flex;
+    }
+    .user_name {
+      display: flex;
+      width: 300px;
+      overflow: scroll;
+      margin-left: 5px;
     }
     .current_status {
       margin-bottom: 10px;
@@ -198,7 +213,6 @@ const Container = styled.div`
         padding: 6px;
       }
       .approve {
-        padding: 5px 18px;
       }
       .profile_btn,
       .skills_btn,
@@ -406,16 +420,36 @@ const Profilepage_admin_want = () => {
           </div>
           <div className="name">{data && data.name}</div>
           <div className="detail1">
-            Student of {data && data.education[0].institution_name}
+            Student of{" "}
+            {data && data.education[0] && data.education[0].institution_name}
           </div>
-          <div className="approve_container">
+          <Approve
+            color={
+              data && data?.ver === 0
+                ? "red"
+                : data?.ver === 1
+                ? "orange"
+                : "#47d065"
+            }
+            className="approve_container"
+          >
             <div className="approve">
               <div className="tick_icon">
-                <CheckCircleIcon />
+                {data && data?.ver === 0 ? (
+                  <CancelIcon />
+                ) : data?.ver === 1 ? (
+                  <LoopIcon />
+                ) : (
+                  <CheckCircleIcon />
+                )}
               </div>
-              Approve
+              {data && data?.ver === 0
+                ? "Not verified"
+                : data?.ver === 1
+                ? "partially verfied"
+                : "verified"}
             </div>
-          </div>
+          </Approve>
           <div className="profile_buttons">
             <div className="profile_btn" onClick={() => setblock(1)}>
               Profile
@@ -435,12 +469,15 @@ const Profilepage_admin_want = () => {
                 Name : <div className="profile_name">{data && data.name}</div>
               </div>
               <div className="email_container">
-                Email : <div className="user_name">{data && data.email}</div>
+                Email : <p className="user_name">{data && data.email}</p>
               </div>
               <div className="current_status">
                 Current status :{" "}
                 <div className="status">
-                  Student @ {data && data.education[0].institution_name}
+                  Student @{" "}
+                  {data &&
+                    data.education[0] &&
+                    data.education[0].institution_name}
                 </div>
               </div>
               <div className="id_detail">
@@ -449,7 +486,7 @@ const Profilepage_admin_want = () => {
               <div className="department_container">
                 Dep :
                 <div className="department">
-                  {data && data.education[0].course}
+                  {data && data.education[0] && data.education[0].course}
                 </div>
               </div>
               <div className="language_container">
@@ -539,7 +576,7 @@ const Profilepage_admin_want = () => {
               data.coding[0].development[0] &&
               data.coding[0].development[0].developer ? (
                 <div className="second_skill">
-                  He is an
+                  He is an{"\t"}
                   {data &&
                     data.coding[0] &&
                     data.coding[0].development[0] &&

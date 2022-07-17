@@ -50,6 +50,11 @@ const Container = styled.div`
     border-radius: 50%;
     background: black;
   }
+  @media screen and (max-width: 940px) {
+    .profile {
+      margin-right: 10px;
+    }
+  }
   .profile img {
     width: 100%;
     height: 100%;
@@ -76,7 +81,7 @@ const Navbar = () => {
       if (data.Role === 0) {
         navigate("/profile");
       }
-      console.log(data);
+      // console.log(data);
 
       // setprofilepath(data.profile);
       // setsocialprofile(data.socialProfile);
@@ -94,7 +99,7 @@ const Navbar = () => {
     }
   };
 
-  console.log(login);
+  // console.log(login);
 
   useEffect(() => {
     callNavbar();

@@ -4,8 +4,6 @@ const Authenticate = require("../middleware/authenticate");
 const USER = require("../modelschemas/userschema");
 const router = express.Router();
 
-console.log("suemsh");
-
 router.post("/upload_stud", Authenticate, async (req, res) => {
   const {
     python,
@@ -132,14 +130,47 @@ router.post("/upload_stud", Authenticate, async (req, res) => {
         ],
       },
     ],
+    ver:
+      python ||
+      c ||
+      cplus ||
+      js ||
+      (sql && english) ||
+      (hindi &&
+        developer &&
+        developer_status &&
+        work &&
+        git &&
+        linkedin &&
+        college_name &&
+        branch &&
+        year &&
+        cgpa &&
+        sscl_maths &&
+        sscl_phy &&
+        sscl_che &&
+        sslc_english &&
+        plustwo_maths &&
+        plustwo_phy &&
+        plustwo_che &&
+        plustwo_english &&
+        plustwo_cs)
+        ? 1
+        : 0,
   });
   res.send(userUpdate);
 });
 
-router.get("/get_stud", async (req, res) => {
+router.post("/get_stud", async (req, res) => {
   try {
-    const user = await USER.find();
-    res.send(user);
+    console.log(req.body);
+    if (req.body.id) {
+      const user = await USER.find().where("_id").in(req.body.id).exec();
+      res.send(user);
+    } else {
+      const user = await USER.find();
+      res.send(user);
+    }
     // console.log(user);
   } catch (error) {
     res.status(400).send(error);
@@ -165,6 +196,50 @@ router.get("/get_stud_profile", Authenticate, async (req, res) => {
   } catch (error) {
     res.status(400).send(error);
   }
+});
+
+router.post("/get_filter_stud", async (req, res) => {
+  const { python, c, cplus, js, sql } = req.body;
+  const user = await USER.find({
+    $or: [
+      python
+        ? {
+            "coding.languages": { $elemMatch: { language_name: "python" } },
+          }
+        : {
+            "coding.languages": { $elemMatch: { language_name: "wer" } },
+          },
+      c
+        ? {
+            "coding.languages": { $elemMatch: { language_name: "c" } },
+          }
+        : {
+            "coding.languages": { $elemMatch: { language_name: "wer" } },
+          },
+      js
+        ? {
+            "coding.languages": { $elemMatch: { language_name: "js" } },
+          }
+        : {
+            "coding.languages": { $elemMatch: { language_name: "wer" } },
+          },
+      sql
+        ? {
+            "coding.languages": { $elemMatch: { language_name: "sql" } },
+          }
+        : {
+            "coding.languages": { $elemMatch: { language_name: "wer" } },
+          },
+      cplus
+        ? {
+            "coding.languages": { $elemMatch: { language_name: "c++" } },
+          }
+        : {
+            "coding.languages": { $elemMatch: { language_name: "wer" } },
+          },
+    ],
+  });
+  res.send(user);
 });
 
 module.exports = router;
